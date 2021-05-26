@@ -1,58 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React, { useEffect } from "react";
+import { Button, Spinner } from "reactstrap";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  data as dataState,
+  loadingStatus,
+  togleModal,
+} from "./app/store/reducers/modalSlice";
+import ModalContainer from "./app/features/Modal/Modal.container";
 
-function App() {
+const App = () => {
+  // Hook to dispatch actions
+  const dispatch = useDispatch();
+
+  // Retrieving data from the state using redux hooks
+  const status = useSelector(loadingStatus);
+  const data = useSelector(dataState);
+
+  // dispatch an action
+  const toggle = () => dispatch(togleModal());
+
+  useEffect(() => {
+    if (status === "success" && Object.keys(data)) {
+      alert(`Data submitted: ${JSON.stringify(data)}`);
+    }
+  }, [status, data]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+    <div className="d-flex justify-content-center align-items-center container-fluid mt-5">
+      {status !== "loading" ? (
+        <Button color="danger" onClick={toggle}>
+          Open Modal
+        </Button>
+      ) : (
+        <div>
+          <Spinner type="grow" color="danger" children={null} />
+        </div>
+      )}
+      <ModalContainer toggle={toggle} />
     </div>
   );
-}
+};
 
 export default App;
