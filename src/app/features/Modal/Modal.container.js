@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import ModalComponent from "./Modal";
 import {
   selectedInput as selectedInputState,
@@ -18,7 +18,7 @@ const ModalContainer = () => {
   // Retrieving data from the state using redux hooks
   const showModal = useSelector(showModalState);
   const selectedInput = useSelector(selectedInputState);
-  const recipients = useSelector(recipientsState);
+  const recipients = useSelector(recipientsState, shallowEqual);
 
   // Callbacks to dispatch actions when something happens in the modal form
   const onChangeModal = () => dispatch(togleModal());
